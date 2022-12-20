@@ -3,6 +3,7 @@ const express = require('express');
 const app = express();
 const mysql = require('mysql2');
 const inquirer = require('inquirer');
+const { response } = require('express');
 const PORT = process.env.PORT || 3001;
 require('dotenv').config();
 
@@ -29,7 +30,8 @@ function mainMenu(){
         choices: [
             'view departments',
             'view roles',
-            'view employees'
+            'view employees',
+            'add department'
         ]
     }).then(({task})=> {
         if (task === 'view departments') {
@@ -38,6 +40,8 @@ function mainMenu(){
             viewRoles()
         } else if (task === 'view employees') {
             viewEmployees()
+        } else if (task === 'add department') {
+            addDepartment()
         }
     })
 };
@@ -45,19 +49,29 @@ function mainMenu(){
 function viewDepartment () {
     db.promise().query('SELECT * FROM department').then(([response]) => {
         console.table(response)
-    })
+    });
+    mainMenu();
 };
 
 function viewRoles () {
     db.promise().query('SELECT * FROM role').then(([response]) => {
         console.table(response)
-    })
+    });
+    mainMenu();
 };
 
 function viewEmployees () {
     db.promise().query('SELECT * FROM employee').then(([response]) => {
         console.table(response)
-    })
+    });
+    mainMenu();
+};
+
+function addDepartment () {
+    db.promise().query('INSERT INTO department(id,dept_name) VALUES(?,?)').then(([response]) => {
+        console.table(response)
+    });
+    mainMenu();
 };
 
 mainMenu();
