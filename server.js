@@ -1,17 +1,17 @@
 // server setup
 const express = require('express');
 const app = express();
-const mysql = requre('mysql12');
-    // I'm not sure if I need to include the '12' or not
+const mysql = require('mysql2');
 const inquirer = require('inquirer');
 const PORT = process.env.PORT || 3001;
+require('dotenv').config();
 
 // connects server to database
 const db = mysql.createConnection ({
     host: 'localhost',
-    user: 'root',
-    password: 'Lobsters2maine',
-    database: 'employee_db'
+    user: process.env.DB_USER,
+    password: process.env.DB_PW,
+    database: process.env.DB_NAME
 });
 db.connect((err) => {
     if(err) {
@@ -20,28 +20,44 @@ db.connect((err) => {
     console.log('MySQL connected')
 });
 
-// middleware for database creation
-app.get('/createdb', (req, res) => {
-    let sql = 'CREATE DATABASE employee_db';
-    db.query(sql, (err) => {
-        if (err) {
-            throw err;
+// CLI interface
+function mainMenu(){
+    inquirer.prompt({
+        type: 'list',
+        name: 'task',
+        message: 'What would you like to do?',
+        choices: [
+            'view departments',
+            'view roles',
+            'view employees'
+        ]
+    }).then(({task})=> {
+        if (task === 'view departments') {
+            viewDepartment()
+        } else if (task === 'view roles') {
+            viewRoles()
+        } else if (task === 'view employees') {
+            viewEmployees()
         }
-        res.send('Database created');
-    });
-});
-app.get('/createemployee', (req, res) => {
-    let sql = 'CREATE TABLE employee(id int AUTO_INCREMENT, name VARCHAR(255), designation VARCHAR(255), PRIMARY KEY(id))';
-    db.query(sql, (err) => {
-        if (err) {
-            throw err;
-        }
-        res.send('Employee table created');
-    });
-});
+    })
+};
 
-// middleware to add employee
+function viewDepartment () {
+    db.promise().query('SELECT * FROM department').then(([response]) => {
+        console.table(response)
+    })
+};
 
-// middleware to update employee
+function viewRoles () {
+    db.promise().query('SELECT * FROM role').then(([response]) => {
+        console.table(response)
+    })
+};
 
-// middleware to  delete emplpoyee
+function viewEmployees () {
+    db.promise().query('SELECT * FROM employee').then(([response]) => {
+        console.table(response)
+    })
+};
+
+mainMenu();
