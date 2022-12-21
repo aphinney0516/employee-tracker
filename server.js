@@ -31,7 +31,7 @@ function mainMenu(){
             'view departments',
             'view roles',
             'view employees',
-            'add department'
+            // 'add department'
         ]
     }).then(({task})=> {
         if (task === 'view departments') {
@@ -40,9 +40,10 @@ function mainMenu(){
             viewRoles()
         } else if (task === 'view employees') {
             viewEmployees()
-        } else if (task === 'add department') {
-            addDepartment()
-        }
+        } 
+        // else if (task === 'add department') {
+        //     addDepartment()
+        // }
     })
 };
 
@@ -67,11 +68,11 @@ function viewEmployees () {
     mainMenu();
 };
 
-function addDepartment () {
-    db.promise().query('INSERT INTO department(id,dept_name) VALUES(?,?)').then(([response]) => {
-        console.table(response)
-    });
-    mainMenu();
-};
+// function addDepartment () {
+//     db.promise().query('INSERT INTO department(id,dept_name) VALUES(?,?)').then(([response]) => {
+//         console.table(response)
+//     });
+//     mainMenu();
+// };
 
 mainMenu();
