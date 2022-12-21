@@ -20,6 +20,7 @@ In order to install this project you will need, node, express, inquire, and a CL
 
 ### Usage
 Please reference the video below for usage.
+https://youtu.be/HCUjrjvHCgU
 
 ### Credits
 I had assistance from my tutor Corey Yates to help get me started on this project.
